@@ -150,24 +150,24 @@ def main(args):
     )
     X_valid, X_test, y_valid, y_test = train_test_split(X_valid, y_valid, test_size=0.7, random_state=SEED,
                                                         stratify=y_valid)
-    transform_train = transforms.Compose([transforms.RandomResizedCrop(224, scale=(0.08, 1.0),
-                                                                       ratio=(3.0 / 4.0, 4.0 / 3.0)),
-                                          transforms.ToTensor(),
-                                          normalize
-                                          ])
-
-    transform_test = transforms.Compose([
-        transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(),
-        normalize])
-    # transform_train = transforms.Compose([transforms.RandomResizedCrop(32, scale=(0.08, 1.0),
+    # transform_train = transforms.Compose([transforms.RandomResizedCrop(224, scale=(0.08, 1.0),
     #                                                                    ratio=(3.0 / 4.0, 4.0 / 3.0)),
     #                                       transforms.ToTensor(),
     #                                       normalize
     #                                       ])
     #
     # transform_test = transforms.Compose([
-    #     transforms.Resize(32), transforms.CenterCrop(32), transforms.ToTensor(),
+    #     transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(),
     #     normalize])
+    transform_train = transforms.Compose([transforms.RandomResizedCrop(32, scale=(0.08, 1.0),
+                                                                       ratio=(3.0 / 4.0, 4.0 / 3.0)),
+                                          transforms.ToTensor(),
+                                          normalize
+                                          ])
+
+    transform_test = transforms.Compose([
+        transforms.Resize(32), transforms.CenterCrop(32), transforms.ToTensor(),
+        normalize])
 
     train_data = dataloader.Dataset_Interpreter(data_path=data_dir + 'train/', file_names=X_train, labels=y_train,
                                                 transforms=transform_train)
@@ -183,7 +183,7 @@ def main(args):
     print(f'Number of validation examples: {len(valid_data)}')
     print(f'Number of testing examples: {len(test_data)}')
 
-    model = models.basic_cnn.Net().to(device)
+    model = models.basic_cnn.LeNet().to(device)
     # model = models.resnet18(pretrained=True).to(device)
     # for name, param in model.named_parameters():
     #     if ("bn" not in name):
@@ -225,6 +225,7 @@ def main(args):
         print(f'Epoch: {epoch + 1:02}')
         print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc * 100:.2f}%')
+        break
     # Test the model
     model.eval()  # eval mode (batchnorm uses moving mean/variance instead of mini-batch mean/variance)
     with torch.no_grad():
@@ -245,9 +246,10 @@ def main(args):
 
         print('Test Accuracy of the model on the 2000 test images: {} %'.format(100 * correct / total))
         classes = ['affenpinscher','afghan_hound','african_hunting_dog','airedale','american_staffordshire_terrier','appenzeller','australian_terrier','basenji','basset','beagle','bedlington_terrier','bernese_mountain_dog','black-and-tan_coonhound','blenheim_spaniel','bloodhound','bluetick','border_collie','border_terrier','borzoi','boston_bull','bouvier_des_flandres','boxer','brabancon_griffon','briard','brittany_spaniel','bull_mastiff','cairn','cardigan','chesapeake_bay_retriever','chihuahua','chow','clumber','cocker_spaniel','collie','curly-coated_retriever','dandie_dinmont','dhole','dingo','doberman','english_foxhound','english_setter','english_springer','entlebucher','eskimo_dog','flat-coated_retriever','french_bulldog','german_shepherd','german_short-haired_pointer','giant_schnauzer','golden_retriever','gordon_setter','great_dane','great_pyrenees','greater_swiss_mountain_dog','groenendael','ibizan_hound','irish_setter','irish_terrier','irish_water_spaniel','irish_wolfhound','italian_greyhound','japanese_spaniel','keeshond','kelpie','kerry_blue_terrier','komondor','kuvasz','labrador_retriever','lakeland_terrier','leonberg','lhasa','malamute','malinois','maltese_dog','mexican_hairless','miniature_pinscher','miniature_poodle','miniature_schnauzer','newfoundland','norfolk_terrier','norwegian_elkhound','norwich_terrier','old_english_sheepdog','otterhound','papillon','pekinese','pembroke','pomeranian','pug','redbone','rhodesian_ridgeback','rottweiler','saint_bernard','saluki','samoyed','schipperke','scotch_terrier','scottish_deerhound','sealyham_terrier','shetland_sheepdog','shih-tzu','siberian_husky','silky_terrier','soft-coated_wheaten_terrier','staffordshire_bullterrier','standard_poodle','standard_schnauzer','sussex_spaniel','tibetan_mastiff','tibetan_terrier','toy_poodle','toy_terrier','vizsla','walker_hound','weimaraner','welsh_springer_spaniel','west_highland_white_terrier','whippet','wire-haired_fox_terrier','yorkshire_terrier']
-        print(classification_report(all_labels, all_preds, target_names=classes))
+
         all_pred = torch.tensor(all_preds)
         all_label = torch.tensor(all_labels)
+        print(classification_report(all_label, all_pred, target_names=classes))
         confusion_mat = confusion_matrix(y_true=all_label, y_pred=all_pred)
         print(confusion_mat)
         plot_confusion_matrix(cm=confusion_matrix(y_true=all_label, y_pred=all_pred),
