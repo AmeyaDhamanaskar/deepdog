@@ -184,7 +184,7 @@ def main(args):
             'state_dict': model.state_dict(),
             'best_loss': BEST_ACC,
         }
-        torch.save(state, 'checkpoint.pth.tar')
+        # torch.save(state, 'checkpoint.pth.tar')
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
             torch.save(model.state_dict(), 'model_best_{}.pth.tar'.format(epoch))

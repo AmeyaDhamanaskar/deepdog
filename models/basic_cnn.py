@@ -104,11 +104,11 @@ class LeNet(nn.Module):
 
     def forward(self, x):
         batch_size = x.shape[0]
-        print(x.shape)
+        # print(x.shape)
         x = self.features(x)
-        print(x.shape)
+        # print(x.shape)
         x = x.view(batch_size, -1)
-        print(x.shape)
+        # print(x.shape)
         x = self.classifier(x)
 
         return x
