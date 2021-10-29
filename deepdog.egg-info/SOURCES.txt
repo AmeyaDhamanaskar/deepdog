@@ -1,0 +1,9 @@
+setup.py
+data/__init__.py
+deepdog.egg-info/PKG-INFO
+deepdog.egg-info/SOURCES.txt
+deepdog.egg-info/dependency_links.txt
+deepdog.egg-info/top_level.txt
+models/__init__.py
+models/basic_cnn.py
+submissions/__init__.py
