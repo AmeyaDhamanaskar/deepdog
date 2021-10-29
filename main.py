@@ -142,6 +142,9 @@ def main(args):
     train_loader = DataLoader(train_data, shuffle=True, num_workers=args.num_workers, batch_size=args.batch_size)
     val_loader = DataLoader(valid_data, num_workers=args.num_workers, batch_size=args.batch_size)
     test_loader = DataLoader(test_data, num_workers=args.num_workers, batch_size=args.batch_size)
+    print(f'Number of training examples: {len(train_data)}')
+    print(f'Number of validation examples: {len(valid_data)}')
+    print(f'Number of testing examples: {len(test_data)}')
 
     model = models.basic_cnn.ConvNet().to(device)
 
