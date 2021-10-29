@@ -13,8 +13,9 @@ from torchvision import transforms
 from torch.autograd import Variable
 import time
 import dataloader
-import models.basic_cnn
+#import models.basic_cnn
 import matplotlib.pyplot as plt
+from torchvision import models
 
 SEED = 1234
 
