@@ -158,10 +158,8 @@ def main(args):
     valid_losses = []
     train_accs = []
     valid_accs = []
-
+    BEST_ACC=0
     for epoch in range(args.num_epochs):
-
-
         train_loss, train_acc = train(model, train_loader, optimizer, criterion, device)
         valid_loss, valid_acc = evaluate(model, val_loader, criterion, device)
 
@@ -169,10 +167,18 @@ def main(args):
         valid_losses.append(valid_loss)
         train_accs.append(train_acc * 100)
         valid_accs.append(valid_acc * 100)
-
+        is_best = valid_loss > BEST_ACC
+        best_loss = max(valid_loss, BEST_ACC)
+        state = {
+            'epoch': epoch + 1,
+            'arch': "abcd",
+            'state_dict': model.state_dict(),
+            'best_loss': BEST_ACC,
+        }
+        torch.save(state, 'checkpoint.pth.tar')
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
-            torch.save(model.state_dict(), f'{args.model_name}.pt')
+            torch.save(model.state_dict(), 'model_best_{}.pth.tar'.format(epoch))
 
         print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc * 100:.2f}%')
@@ -197,23 +203,16 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', type=str, required=True, help='path for saving trained models')
-    parser.add_argument('--model_name', type=str, required=True, help='model name')
-
     parser.add_argument('--image_dir', type=str, default='images/', help='directory for resized images')
-
-    parser.add_argument('--embed_size', type=int, default=256, help='dimension of word embedding vectors')
-    parser.add_argument('--hidden_size', type=int, default=512, help='dimension of lstm hidden states')
-    parser.add_argument('--num_layers', type=int, default=2, help='number of layers in lstm')
     parser.add_argument('--learning_rate', type=float, default=0.001)
-    parser.add_argument('--seq_length', type=int, default=512, help='length of the pose/video sequences')
     parser.add_argument('--crop_size', type=int, default=224, help='size for randomly cropping images')
 
     parser.add_argument('--num_epochs', type=int, default=20)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num_workers', type=int, default=4)
-
-    parser.add_argument('--log_step', type=int, default=10, help='step size for prining log info')
-    parser.add_argument('--save_step', type=int, default=5, help='step size for saving trained models')
+    #
+    # parser.add_argument('--log_step', type=int, default=10, help='step size for prining log info')
+    # parser.add_argument('--save_step', type=int, default=5, help='step size for saving trained models')
 
     args = parser.parse_args()
     print(args)
