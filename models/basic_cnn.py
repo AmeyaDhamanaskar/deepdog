@@ -82,18 +82,6 @@ class Net(nn.Module):
         x = self.fc_02(x)
         return x
 
-class ResNet(nn.Module):
-    ### DONE: choose an architecture, and complete the class
-    def __init__(self):
-        model = models.resnet18(pretrained=True).to(device)
-        for name, param in model.named_parameters():
-            if ("bn" not in name):
-                param.requires_grad = False
-        model.fc = nn.Linear(model.fc.in_features, 120).to(device)
-
-    def forward(self, x):
-
-        return x
 
 class LeNet(nn.Module):
     def __init__(self):
