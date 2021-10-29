@@ -155,12 +155,18 @@ def main(args):
     print(f'Number of validation examples: {len(valid_data)}')
     print(f'Number of testing examples: {len(test_data)}')
 
-    model = models.basic_cnn.Net().to(device)
+    #model = models.basic_cnn.Net().to(device)
+    model = models.resnet18(pretrained=True).to(device)
+    for name, param in model.named_parameters():
+        if ("bn" not in name):
+            param.requires_grad = False
+    model.fc = nn.Linear(model.fc.in_features, 120).to(device)
+
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
-    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    optimizer = torch.optim.Adam(model.parameters())
+    optimizer = torch.optim.Adam(model.parameters(), lr = 1e-2)
+    #optimizer = torch.optim.Adam(model.parameters())
     best_valid_loss = float('inf')
 
     train_losses = []
@@ -188,7 +194,7 @@ def main(args):
         if valid_loss < best_valid_loss:
             best_valid_loss = valid_loss
             torch.save(model.state_dict(), 'model_best_{}.pth.tar'.format(epoch))
-
+        print(f'Epoch: {epoch + 1:02}')
         print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
         print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc * 100:.2f}%')
     # Test the model

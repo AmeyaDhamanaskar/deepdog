@@ -3,6 +3,7 @@ import torch.nn as nn
 import torchvision.models as models
 from torch.nn.utils.rnn import pack_padded_sequence
 import torch.nn.functional as F
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class ConvNet(nn.Module):
     def __init__(self, num_classes=120):
@@ -81,6 +82,18 @@ class Net(nn.Module):
         x = self.fc_02(x)
         return x
 
+class ResNet(nn.Module):
+    ### DONE: choose an architecture, and complete the class
+    def __init__(self):
+        model = models.resnet18(pretrained=True).to(device)
+        for name, param in model.named_parameters():
+            if ("bn" not in name):
+                param.requires_grad = False
+        model.fc = nn.Linear(model.fc.in_features, 120).to(device)
+
+    def forward(self, x):
+
+        return x
 
 class LeNet(nn.Module):
     def __init__(self):
