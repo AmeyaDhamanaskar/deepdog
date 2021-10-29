@@ -106,7 +106,7 @@ def evaluate(model, iterator, criterion, device):
 
 def main(args):
 
-    data_dir = '../data/'
+    data_dir = '/data/'
     labels = pd.read_csv(os.path.join(data_dir, 'labels.csv'))
     le = LabelEncoder()
     labels.breed = le.fit_transform(labels.breed)
