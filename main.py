@@ -113,7 +113,7 @@ def main(args):
     labels.head()
     X = labels.id
     y = labels.breed
-    assert (len(os.listdir(os.path.join(data_dir, 'train'))) == len(labels))
+    # assert (len(os.listdir(os.path.join(data_dir, 'train'))) == len(labels))
     test_labels = pd.read_csv(os.path.join(data_dir, 'sample_submission.csv'))
     test_labels.breed = le.fit_transform(test_labels.breed)
     X_test = test_labels.id
