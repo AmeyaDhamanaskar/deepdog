@@ -9,7 +9,7 @@ from PIL import Image
 import os
 import argparse
 import numpy as np
-class Dataset_Interpreter(data.Datase):
+class Dataset_Interpreter(data.Dataset):
 	def __init__(self, data_path, file_names, labels=None, transforms=None):
 		self.data_path = data_path
 		self.file_names = file_names
