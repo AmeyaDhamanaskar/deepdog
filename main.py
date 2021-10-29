@@ -114,17 +114,14 @@ def main(args):
     X = labels.id
     y = labels.breed
     # assert (len(os.listdir(os.path.join(data_dir, 'train'))) == len(labels))
-    test_labels = pd.read_csv(os.path.join(data_dir, 'sample_submission.csv'))
-    test_labels.breed = le.fit_transform(test_labels.breed)
-    X_test = test_labels.id
-    y_test = test_labels.breed
     print(labels.head())
-
-    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.1, random_state=SEED, stratify=y)
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.3, random_state=SEED, stratify=y)
     normalize = transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225]
     )
+    X_valid, X_test, y_valid, y_test = train_test_split(X_valid, y_valid, test_size=0.7, random_state=SEED,
+                                                        stratify=y_valid)
     transform_train = transforms.Compose([transforms.RandomResizedCrop(224, scale=(0.08, 1.0),
                                                                        ratio=(3.0 / 4.0, 4.0 / 3.0)),
                                           transforms.ToTensor(),
@@ -139,7 +136,7 @@ def main(args):
                                                 transforms=transform_train)
     valid_data = dataloader.Dataset_Interpreter(data_path=data_dir + 'train/', file_names=X_valid, labels=y_valid,
                                                 transforms=transform_test)
-    test_data = dataloader.Dataset_Interpreter(data_path=data_dir + 'test/', file_names=X_test, labels=y_test,
+    test_data = dataloader.Dataset_Interpreter(data_path=data_dir + 'train/', file_names=X_test, labels=y_test,
                                                transforms=transform_test)
 
     train_loader = DataLoader(train_data, shuffle=True, num_workers=args.num_workers, batch_size=args.batch_size)
