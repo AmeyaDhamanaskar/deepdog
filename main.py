@@ -146,7 +146,7 @@ def main(args):
     print(f'Number of validation examples: {len(valid_data)}')
     print(f'Number of testing examples: {len(test_data)}')
 
-    model = models.basic_cnn.ConvNet().to(device)
+    model = models.basic_cnn.LeNet().to(device)
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
